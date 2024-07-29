@@ -2,21 +2,10 @@ import { View, Text } from "react-native";
 import { Link } from "expo-router";
 import { globalStyles } from "../../../styles/gobalStyles";
 import { useLocalSearchParams } from "expo-router";
-
-const books = [
-  {
-    id: "1",
-    name: "Buch 1",
-  },
-  {
-    id: "2",
-    name: "Buch 2",
-  },
-];
+import { books } from "../../../data/books";
 
 export default function BooksDetailsPage() {
   const { bookid } = useLocalSearchParams();
-  console.log("Hallo");
   const foundBook = books.find((book) => {
     return book.id === bookid;
   });

@@ -19,7 +19,7 @@ export default function MybooksStack() {
       }}
     >
       <Stack.Screen
-        name="my books"
+        name="index"
         options={{
           title: "My Books",
         }}

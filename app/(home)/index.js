@@ -5,13 +5,17 @@ import { globalStyles } from "../../styles/gobalStyles";
 export default function HomePage() {
   return (
     <>
-      <Text style={globalStyles.heading}>I am the Homepage</Text>
-      <Link style={globalStyles.paragraph} href="books">
-        Find books
-      </Link>
-      <Link style={globalStyles.paragraph} href="books/mybooks">
-        My Books
-      </Link>
+      <Text style={globalStyles.heading}>Welcome</Text>
+      {/* <View>
+        <Text style={globalStyles.paragraph}>Login</Text>
+        <TextInput />
+        <Button
+          onPress={() => {
+            console.log(`Username: ${name} Password: ${password}`);
+          }}
+          title="Submit"
+        />
+      </View> */}
     </>
   );
 }
