@@ -20,7 +20,7 @@ export default function BooksDetailsPage() {
 
   return (
     <View style={globalStyles.pageContainer}>
-      <Text style={globalStyles.heading}>Hi, my name is {foundBook.name}</Text>
+      <Text style={globalStyles.heading}>Hi, my name is {foundBook.title}</Text>
     </View>
   );
 }
