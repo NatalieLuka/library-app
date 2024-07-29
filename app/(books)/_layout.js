@@ -1,10 +1,13 @@
 import { Stack } from "expo-router";
 import { COLORS } from "../../styles/constants";
 
-export default function ContactStack() {
+export default function BooksStack() {
   return (
     <Stack
       screenOptions={{
+        headerBackTitleVisible: false,
+        headerTintColor: "white",
+
         headerStyle: {
           backgroundColor: COLORS.background,
         },
@@ -19,9 +22,15 @@ export default function ContactStack() {
       }}
     >
       <Stack.Screen
-        name="contact"
+        name="index"
         options={{
-          title: "Contact",
+          title: "Books",
+        }}
+      />
+      <Stack.Screen
+        name="[bookid]/index"
+        options={{
+          title: "Book Details",
         }}
       />
     </Stack>

@@ -3,10 +3,10 @@ import { View, Text, Pressable } from "react-native";
 import { Link, router } from "expo-router";
 import { globalStyles } from "../../styles/gobalStyles";
 
-export default function ContactPage() {
+export default function MybooksPage() {
   return (
     <>
-      <Text style={globalStyles.heading}>I am the contact page</Text>
+      <Text style={globalStyles.heading}>My Books</Text>
     </>
   );
 }

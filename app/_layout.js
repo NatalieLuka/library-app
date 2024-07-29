@@ -3,7 +3,7 @@ import { globalStyles } from "../styles/gobalStyles";
 import { Link, router, Slot, Tabs } from "expo-router";
 import { COLORS } from "../styles/constants";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FontAwesome, FontAwesome5, Fontisto } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
 export default function RootLayout() {
   return (
@@ -26,20 +26,20 @@ export default function RootLayout() {
         }}
       />
       <Tabs.Screen
-        name="animals"
+        name="(books)"
         options={{
-          title: "All Animals",
+          title: "All Books",
           tabBarIcon: ({ color }) => {
-            return <FontAwesome5 name="paw" size={24} color={color} />;
+            return <FontAwesome name="book" size={24} color={color} />;
           },
         }}
       />
       <Tabs.Screen
-        name="(contact)"
+        name="(mybooks)"
         options={{
-          title: "Contact Us",
+          title: "My Books",
           tabBarIcon: ({ color }) => {
-            return <Fontisto name="email" size={24} color={color} />;
+            return <FontAwesome5 name="book-reader" size={24} color={color} />;
           },
         }}
       />
