@@ -16,8 +16,8 @@ const renderItem = ({ item }) => {
     <View style={styles.item}>
       <Text style={globalStyles.paragraph}>{item.title}</Text>
       <Text style={globalStyles.paragraph}>{item.author}</Text>
-      <Image src={item.coverimage} style={styles.image} />
-      <Link style={globalStyles.paragraph} href={item.id}>
+      <Image source={item.coverimage} style={styles.image} />
+      <Link style={globalStyles.paragraph} href={`${item.id}`}>
         View more details
       </Link>
     </View>
@@ -33,7 +33,7 @@ export default function BooksPage() {
       try {
         const response = await fetch(API);
         const data = await response.json();
-        // console.log(data);
+        console.log(data);
         setBooks(data);
       } catch (error) {
         console.log(error);
@@ -49,6 +49,7 @@ export default function BooksPage() {
     <SafeAreaProvider>
       <SafeAreaView>
         <Text style={globalStyles.heading}>Find your favorite Book</Text>
+
         <FlatList
           data={books}
           renderItem={renderItem}
@@ -67,6 +68,7 @@ const styles = StyleSheet.create({
   },
   item: {
     padding: 20,
+    gap: 5,
   },
   image: {
     width: 100,

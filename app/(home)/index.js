@@ -1,8 +1,8 @@
 import { View, Text, Pressable, TextInput, StyleSheet } from "react-native";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { globalStyles } from "../../styles/gobalStyles";
 import { COLORS } from "../../styles/constants";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Foundation, MaterialIcons } from "@expo/vector-icons";
 import { useUser } from "../../context/UserContext";
 
@@ -10,17 +10,22 @@ export default function HomePage() {
   const [name, setName] = useState("");
   const { user, login, logout } = useUser();
 
+  // switch to next site, when user is logged in
+  useEffect(() => {
+    router.push("/(books)");
+  }, [user]);
+
   return (
     <>
-      <Text>User: {user ? user.name + " " + user.id : "Not logged in"}</Text>
-      <Text style={globalStyles.heading}>Welcome to the library App</Text>
-      <Text style={globalStyles.paragraph}>
-        Sign up to find your favorite books
+      <Text style={globalStyles.heading}>
+        Welcome to the library App {user ? user.name + " " : null}
       </Text>
+
       <View style={styles.loginContainer}>
         <Text style={globalStyles.paragraph}>
           Login <MaterialIcons name="login" size={24} color="white" />
         </Text>
+
         <TextInput
           placeholder="Name"
           autoCapitalize="none"
@@ -30,17 +35,15 @@ export default function HomePage() {
           }}
           style={styles.textInput}
         />
+
         <Pressable
           onPress={() => {
             login(`${name} `);
           }}
           title="Login"
-          style={styles.button}
+          style={globalStyles.button}
         >
           <Text>Login</Text>
-        </Pressable>
-        <Pressable onPress={logout} title="Logout" style={styles.button}>
-          <Text>Logout</Text>
         </Pressable>
       </View>
     </>
@@ -61,18 +64,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     padding: 8,
     fontSize: 18,
-    color: COLORS.primary,
-  },
-
-  button: {
-    width: "100%",
-    backgroundColor: COLORS.primary,
-    borderRadius: 6,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonText: {
-    fontSize: 20,
+    color: COLORS.background,
+    backgroundColor: "white",
   },
 });
