@@ -4,12 +4,15 @@ import { globalStyles } from "../../styles/gobalStyles";
 import { COLORS } from "../../styles/constants";
 import { useState } from "react";
 import { Foundation, MaterialIcons } from "@expo/vector-icons";
+import { useUser } from "../../context/UserContext";
 
 export default function HomePage() {
   const [name, setName] = useState("");
+  const { user, login, logout } = useUser();
 
   return (
     <>
+      <Text>User: {user ? user.name + " " + user.id : "Not logged in"}</Text>
       <Text style={globalStyles.heading}>Welcome to the library App</Text>
       <Text style={globalStyles.paragraph}>
         Sign up to find your favorite books
@@ -29,12 +32,15 @@ export default function HomePage() {
         />
         <Pressable
           onPress={() => {
-            console.log(`Username: ${name} `);
+            login(`${name} `);
           }}
-          title="Submit"
+          title="Login"
           style={styles.button}
         >
-          <Text>Submit</Text>
+          <Text>Login</Text>
+        </Pressable>
+        <Pressable onPress={logout} title="Logout" style={styles.button}>
+          <Text>Logout</Text>
         </Pressable>
       </View>
     </>
