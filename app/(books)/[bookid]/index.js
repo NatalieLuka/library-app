@@ -1,8 +1,9 @@
-import { View, Text } from "react-native";
-import { Link } from "expo-router";
+import { View, Text, StyleSheet } from "react-native";
 import { globalStyles } from "../../../styles/gobalStyles";
 import { useLocalSearchParams } from "expo-router";
-import { books } from "../../../data/books";
+import { Image } from "expo-image";
+
+const API = "https://boot-library.onrender.com/books";
 
 export default function BooksDetailsPage() {
   const { bookid } = useLocalSearchParams();
@@ -20,7 +21,16 @@ export default function BooksDetailsPage() {
 
   return (
     <View style={globalStyles.pageContainer}>
-      <Text style={globalStyles.heading}>Hi, my name is {foundBook.title}</Text>
+      <Text style={globalStyles.heading}>{foundBook.title}</Text>
+      <Text style={globalStyles.heading}>{foundBook.author}</Text>
+      <Image src={foundBook.coverimage} style={styles.image} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  image: {
+    width: 200,
+    height: 200,
+  },
+});
