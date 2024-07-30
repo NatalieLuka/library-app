@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, Modal } from "react-native";
 import { globalStyles } from "../../../styles/gobalStyles";
 import { useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
@@ -9,9 +9,11 @@ const API = "https://boot-library.onrender.com/books";
 export default function BooksDetailsPage() {
   const [foundBook, setFoundBook] = useState(null);
   const { bookid } = useLocalSearchParams();
-  // const foundBook = books.find((book) => {
-  //   return book.id === bookid;
-  // });
+  const [modalVisible, setModalVisible] = useState(false);
+  const [cart, setCart] = useState([]);
+  const addToCart = (item) => {
+    setCart([...cart, item]);
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -19,7 +21,7 @@ export default function BooksDetailsPage() {
         const response = await fetch(API + "/" + bookid);
         const data = await response.json();
 
-        setFoundBook(data[0]);
+        setFoundBook(data);
       } catch (error) {
         console.log(error);
       } finally {
@@ -49,15 +51,44 @@ export default function BooksDetailsPage() {
         <View style={styles.imageContainer}>
           <Image source={foundBook.coverimage} style={styles.image} />
         </View>
+        <Text style={globalStyles.paragraph}>
+          Total stock: {foundBook.totalCopies}
+        </Text>
       </View>
       <Pressable
         onPress={() => {
-          login(`${name} `);
+          setModalVisible(true);
         }}
         style={globalStyles.button}
       >
         <Text>Borrow</Text>
       </Pressable>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Do you want to borrow this book?</Text>
+          <View style={styles.modalButtons}>
+            <Pressable
+              style={[globalStyles.button, { width: "50%" }]}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text>Yes</Text>
+            </Pressable>
+            <Pressable
+              style={[globalStyles.button, { width: "50%" }]}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text>No</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -69,5 +100,16 @@ const styles = StyleSheet.create({
   },
   detailContainer: {
     flex: 1,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+  },
+  modalButtons: {
+    flexDirection: "row",
+    gap: 5,
   },
 });

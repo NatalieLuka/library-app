@@ -13,6 +13,10 @@ export default function MybooksPage() {
           User: {user ? user.name + " " + user.id : "Not logged in"}
         </Text>
         <Text style={globalStyles.heading}> My borrowed Books </Text>
+        {/* {cart.map((item, index) => (
+          <Text key={index}>{item}</Text> */}
+        {/* ))} */}
+
         <Pressable style={globalStyles.button}>
           <Text>Return Book</Text>
         </Pressable>
