@@ -10,7 +10,7 @@ export default function BooksPage() {
       <View style={styles.item}>
         <Text style={globalStyles.paragraph}>{item.title}</Text>
         <Text style={globalStyles.paragraph}>{item.author}</Text>
-        <Link style={globalStyles.paragraph} href="[id]">
+        <Link style={globalStyles.paragraph} href={item.id}>
           View more details
         </Link>
       </View>
