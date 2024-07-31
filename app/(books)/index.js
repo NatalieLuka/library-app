@@ -1,13 +1,11 @@
 import { FlatList, View, Text, StyleSheet, Pressable } from "react-native";
-import { Link } from "expo-router";
+import { Link, useFocusEffect } from "expo-router";
 import { globalStyles } from "../../styles/gobalStyles";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Image } from "expo-image";
 
-// import { books } from "../../data/books";
-
-const API = "https://boot-library.onrender.com/books";
+const API = `${process.env.EXPO_PUBLIC_API_URL}/books`;
 
 // item = book
 
@@ -16,7 +14,7 @@ const renderItem = ({ item }) => {
     <View style={styles.item}>
       <Text style={globalStyles.paragraph}>{item.title}</Text>
       <Text style={globalStyles.paragraph}>{item.author}</Text>
-      <Image source={item.coverimage} style={styles.image} />
+      <Image source={item.coverImage} style={styles.image} />
       <Link style={globalStyles.paragraph} href={`${item.id}`}>
         View more details
       </Link>
@@ -28,22 +26,23 @@ export default function BooksPage() {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const response = await fetch(API);
-        const data = await response.json();
-        console.log(data);
-        setBooks(data);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
+  useFocusEffect(
+    useCallback(() => {
+      async function loadData() {
+        try {
+          const response = await fetch(API);
+          const data = await response.json();
+          setBooks(data);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setIsLoading(false);
+        }
       }
-    }
-
-    loadData();
-  }, []);
+      console.log("useFocusEffect called");
+      loadData();
+    }, [])
+  );
 
   return (
     <SafeAreaProvider>

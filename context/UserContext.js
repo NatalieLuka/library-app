@@ -29,20 +29,39 @@ export function UserProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    async function writeToAsynStorage() {
+    async function writeToAsyncStorage() {
       await AsyncStorage.setItem("user", JSON.stringify(user));
     }
     if (isReady) {
-      writeToAsynStorage();
+      writeToAsyncStorage();
     }
   }, [user, isReady]);
 
   async function login(userName) {
-    await wait(1000);
-    setUser({
-      name: userName,
-      id: "12345",
-    });
+    // await wait(1000);
+    console.log("userName", userName);
+    try {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: userName,
+        }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log("data", data);
+        setUser(data);
+      } else {
+        console.log("something went wrong");
+        const errorMessage = await response.json();
+        console.log(errorMessage);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async function logout() {

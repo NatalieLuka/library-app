@@ -12,7 +12,9 @@ export default function HomePage() {
 
   // switch to next site, when user is logged in
   useEffect(() => {
-    router.push("/(books)");
+    if (user) {
+      router.push("/(books)");
+    }
   }, [user]);
 
   return (

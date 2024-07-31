@@ -1,45 +1,78 @@
-import { View, Text, StyleSheet, Pressable, Modal } from "react-native";
+import { View, Text, StyleSheet, Pressable, Modal, Alert } from "react-native";
 import { globalStyles } from "../../../styles/gobalStyles";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useFocusEffect } from "expo-router";
 import { Image } from "expo-image";
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
+import { useUser } from "../../../context/UserContext";
 
-const API = "https://boot-library.onrender.com/books";
+const API = `${process.env.EXPO_PUBLIC_API_URL}/books`;
 
 export default function BooksDetailsPage() {
+  const { user } = useUser();
   const [foundBook, setFoundBook] = useState(null);
   const { bookid } = useLocalSearchParams();
   const [modalVisible, setModalVisible] = useState(false);
-  const [cart, setCart] = useState([]);
-  const addToCart = (item) => {
-    setCart([...cart, item]);
+  const addToCart = async () => {
+    if (!user) {
+      Alert.alert("You must be logged in to rent this book!");
+    }
   };
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const response = await fetch(API + "/" + bookid);
-        const data = await response.json();
-
-        setFoundBook(data);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        // setIsLoading(false);
+  useFocusEffect(
+    useCallback(() => {
+      async function loadData() {
+        try {
+          const response = await fetch(API + "/" + bookid);
+          const data = await response.json();
+          console.log(data);
+          setFoundBook(data);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          // setIsLoading(false);
+        }
       }
-    }
 
-    if (bookid) {
-      loadData();
-    }
-  }, [bookid]);
+      if (bookid) {
+        console.log("get new bookdetails");
+        loadData();
+      }
+    }, [bookid])
+  );
 
   if (!foundBook) {
     return (
       <>
-        <Text>Book not found </Text>
+        <Text style={globalStyles.paragraph}>Book not found </Text>
       </>
     );
+  }
+
+  async function rentBook() {
+    console.log(user.id);
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_API_URL}/books/${foundBook.id}/rent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id,
+          }),
+        }
+      );
+      if (response.ok) {
+        Alert.alert("You successfully rent this book");
+      } else {
+        console.log("something went wrong");
+        const errorMessage = await response.json();
+        console.log(errorMessage);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -49,10 +82,10 @@ export default function BooksDetailsPage() {
         <Text style={globalStyles.paragraph}>{foundBook.author}</Text>
 
         <View style={styles.imageContainer}>
-          <Image source={foundBook.coverimage} style={styles.image} />
+          <Image source={foundBook.coverImage} style={styles.image} />
         </View>
         <Text style={globalStyles.paragraph}>
-          Total stock: {foundBook.totalCopies}
+          Available for rent: {foundBook.copiesInStock} /{foundBook.totalCopies}
         </Text>
       </View>
       <Pressable
@@ -61,7 +94,7 @@ export default function BooksDetailsPage() {
         }}
         style={globalStyles.button}
       >
-        <Text>Borrow</Text>
+        <Text>Rent</Text>
       </Pressable>
       <Modal
         animationType="slide"
@@ -72,11 +105,15 @@ export default function BooksDetailsPage() {
         }}
       >
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>Do you want to borrow this book?</Text>
+          <Text style={styles.modalText}>Do you want to rent this book?</Text>
           <View style={styles.modalButtons}>
             <Pressable
               style={[globalStyles.button, { width: "50%" }]}
-              onPress={() => setModalVisible(false)}
+              onPress={() => {
+                setModalVisible(false);
+                rentBook();
+                // sendSelectedBooks(selectedBooks);
+              }}
             >
               <Text>Yes</Text>
             </Pressable>
